@@ -9,7 +9,7 @@ PYGAME_WINDOW = pygame.display.set_mode((1024,768))
 #Counters for OPTIONS menu
 labyrinths = 2
 days = 4
-allowedTime = 120
+allowedTime = 25
 #Global fonts
 fontSize50 = pygame.font.SysFont(None, 50)
 fontSize30 = pygame.font.SysFont(None, 30)
@@ -195,7 +195,7 @@ while running:
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if quitButton.collidepoint(pygame.mouse.get_pos()):
-                    test = False
+                    lose = False
                     quit = True
     elif exploring:
         status = labyrinthexplorer.mainexplore(allowedTime, days)
