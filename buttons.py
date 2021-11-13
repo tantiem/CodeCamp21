@@ -4,6 +4,10 @@ import makeFunctions
 #Initialize Pygame
 pygame.init()
 PYGAME_WINDOW = pygame.display.set_mode((1024,768))
+#Counters for OPTIONS menu
+labyrinths = 2
+days = 4
+allowedTime = 120
 #Set variable for title and color it
 surface1 = pygame.surface.Surface((1024,175))
 surface1.fill((179,186,179))
@@ -22,19 +26,19 @@ numberLabyrinthsTitle = numberLabyrinthsFont.render('Number of Labyrinths', True
 underLayNumberLabyrinths = pygame.surface.Surface((60,40))
 underLayNumberLabyrinths.fill((52,86,145))
 numberLabyrinthsCounterFont = pygame.font.SysFont(None, 50)
-numberLabyrinthsCounterShown = numberLabyrinthsCounterFont.render('2', True, (179,186,179))
+numberLabyrinthsCounterShown = numberLabyrinthsCounterFont.render(str(labyrinths), True, (179,186,179))
 
 numberDaysFont = pygame.font.SysFont(None, 50)
 numberDaysTitle = numberLabyrinthsFont.render('Number of Days', True, (255,255,255))
 numberDaysCounterFont = pygame.font.SysFont(None, 50)
-numberDaysCounterShown = numberDaysCounterFont.render('4', True, (179,186,179))
+numberDaysCounterShown = numberDaysCounterFont.render(str(days), True, (179,186,179))
 
 allowedTimeFont = pygame.font.SysFont(None, 50)
 allowedTimeTitle = allowedTimeFont.render('Allowed Time Per Labyrinth', True, (255,255,255))
 underLayallowedTime = pygame.surface.Surface((250,40))
 underLayallowedTime.fill((52,86,145))
 allowedTimeCounterFont = pygame.font.SysFont(None, 50)
-allowedTimeCounterShown = allowedTimeCounterFont.render('120 seconds', True, (179,186,179))
+allowedTimeCounterShown = allowedTimeCounterFont.render(str(allowedTime)+' seconds', True, (179,186,179))
 ##################################################################################################
 #Game runnning
 main = True
@@ -106,6 +110,31 @@ while running:
         mainButton = makeFunctions.makeButton(PYGAME_WINDOW, (775, 650), "Main Menu",(179,186,179),(49,96,196),(52,79,125),(52,86,145),50)
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
+                if lower1.collidepoint(pygame.mouse.get_pos()):
+                    if labyrinths != 1:
+                        labyrinths -= 1
+                        numberLabyrinthsCounterShown = numberLabyrinthsCounterFont.render(str(labyrinths), True, (179,186,179))
+                elif upper1.collidepoint(pygame.mouse.get_pos()):
+                    if labyrinths != 8:
+                        labyrinths += 1
+                        numberLabyrinthsCounterShown = numberLabyrinthsCounterFont.render(str(labyrinths), True, (179,186,179))
+                elif lower2.collidepoint(pygame.mouse.get_pos()):
+                    if days > labyrinths:
+                        days -= 1
+                        numberDaysCounterShown = numberDaysCounterFont.render(str(days), True, (179,186,179))
+                elif upper2.collidepoint(pygame.mouse.get_pos()):
+                    if days != 16:
+                        days += 1
+                        numberDaysCounterShown = numberDaysCounterFont.render(str(days), True, (179,186,179))
+                elif lower3.collidepoint(pygame.mouse.get_pos()):
+                    if allowedTime != 5:
+                        allowedTime -= 5
+                        allowedTimeCounterShown = allowedTimeCounterFont.render(str(allowedTime)+' seconds', True, (179,186,179))
+                elif upper3.collidepoint(pygame.mouse.get_pos()):
+                    if allowedTime != 995:
+                        allowedTime += 5
+                        allowedTimeCounterShown = allowedTimeCounterFont.render(str(allowedTime)+' seconds', True, (179,186,179))
+                
                 if mainButton.collidepoint(pygame.mouse.get_pos()):
                     options = False
                     main = True
