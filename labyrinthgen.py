@@ -7,6 +7,21 @@ CENTRANCE = 2
 CEXIT = 3
 
 
+class MatrixGridObjectContainer:
+    def __init__(self, *args):
+        self.objContainer = []
+        for i in range(4):
+            self.objContainer.append(args[i])
+
+    def GetObjAtIndex(self,index):
+        #Hardcoded based on consts
+        if index >= 0 and index < 4:
+            return self.objContainer[index]
+
+    def GetEndOfLineObj(self):
+        return None
+
+
 class MatrixGrid:
     """
     A matrix grid that builds a maze and puts it into a graph data structure
@@ -23,7 +38,7 @@ class MatrixGrid:
         self.size = size
         if size % 2 == 0:
             self.size += 1
-        self.map = ""
+        self.map = []
         self.adjacencyList = []
 
         self.walls = []
@@ -122,9 +137,9 @@ class MatrixGrid:
         #convert from linear j pos to grid xy coord
         return ((gridLocCurCell[0]*2) + 1,(gridLocCurCell[1]*2) + 1)
 
-    def BuildMap(self,start,end):
+    def BuildMap(self,start,end,matrixObjContainer:MatrixGridObjectContainer):
         self.Generate(start,end)
-        self.map = ""
+        self.map = []
         startWallsPos = self.GraphIndexToWallsPos(start)
         endWallsPos = self.GraphIndexToWallsPos(end)
         self.walls[startWallsPos[1]][startWallsPos[0]] = CENTRANCE
@@ -132,20 +147,21 @@ class MatrixGrid:
         for row in self.walls:
             for col in row:
                 if col == CFLOOR:
-                    self.map += '   '
+                    self.map.append(matrixObjContainer.GetObjAtIndex(CFLOOR))
                 elif col == CWALL:
-                    self.map += '[x]'
+                    self.map.append(matrixObjContainer.GetObjAtIndex(CWALL))
                 elif col == CENTRANCE:
-                    self.map += ' O '
+                    self.map.append(matrixObjContainer.GetObjAtIndex(CENTRANCE))
                 elif col == CEXIT:
-                    self.map += ' X '
-            self.map += '\n'
+                    self.map.append(matrixObjContainer.GetObjAtIndex(CEXIT))
+            self.map.append(matrixObjContainer.GetEndOfLineObj())
+        self.map.append(0)
         
 
         
         
 
-maze = MatrixGrid(11)
-maze.BuildMap(0,120)
+#labyrinth = MatrixGrid(11)
+#labyrinth.BuildMap(0,120)
 
 
