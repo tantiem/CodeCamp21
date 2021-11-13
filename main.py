@@ -2,6 +2,7 @@ import pygame
 from pygame import locals
 import makeFunctions
 import makePages
+import labyrinthexplorer
 #Initialize Pygame
 pygame.init()
 PYGAME_WINDOW = pygame.display.set_mode((1024,768))
@@ -69,6 +70,7 @@ howToPlay = False
 options = False
 test = False
 quit = False
+exploring = False
 running = True
 while running:
     for event in pygame.event.get():
@@ -125,7 +127,8 @@ while running:
             if triggerGrassRect.collidepoint((playerOasisX,playerOasisy-1)):
                 playerOasisy-=1
                 if (playerOasisy - 1) < 0:
-                    pygame.quit()
+                    startGame = False
+                    exploring = True
             elif (playerOasisy - 1) > 99:
                 playerOasisy-=1
         elif heldDownKeys[locals.K_s]:
@@ -175,6 +178,8 @@ while running:
                     main = True
     elif test:
         pass
+    elif exploring:
+        labyrinthexplorer.mainexplore()
     elif quit:
         pygame.quit()
     pygame.display.flip()

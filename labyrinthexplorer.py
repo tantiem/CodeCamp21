@@ -104,7 +104,7 @@ def sqrMagnitude(x1,y1,x2,y2):
     return (y2-y1)*(y2-y1) + (x2-x1)*(x2-x1)
     
 
-def main():
+def mainexplore():
     running = True
 
     labyrinthParse = LabyrinthParser((0,0),tileSize)
@@ -120,10 +120,10 @@ def main():
     mainCam.SetCamPos(Vector2(startPos[0]*tileSize,startPos[1]*tileSize))
     mainCam.MoveCam(Vector2(-SCR_X/4,-SCR_Y/4))
 
-    Vec2Left = Vector2(-1,0)
-    Vec2Right = Vector2(1,0)
-    Vec2Up = Vector2(0,-1)
-    Vec2Down = Vector2(0,1)
+    Vec2Left = Vector2(-2,0)
+    Vec2Right = Vector2(2,0)
+    Vec2Up = Vector2(0,-2)
+    Vec2Down = Vector2(0,2)
 
     while running:
         inputManager.Refresh()
@@ -131,7 +131,7 @@ def main():
             running = False
         if inputManager.GetKeyHeld(locals.K_d):
             valid = True
-            testRect = pygame.rect.Rect(player.rect.left + 1,player.rect.top,player.rect.width,player.rect.height)
+            testRect = pygame.rect.Rect(player.rect.left + 2,player.rect.top,player.rect.width,player.rect.height)
             for spr in wallGroup:
                 distanceSquared = sqrMagnitude(player.gPosition.x, player.gPosition.y, spr.rect.x,spr.rect.y)
                 if distanceSquared < RENDER_DISTANCE * RENDER_DISTANCE:
@@ -145,7 +145,7 @@ def main():
 
         if inputManager.GetKeyHeld(locals.K_a):
             valid = True
-            testRect = pygame.rect.Rect(player.rect.left - 1,player.rect.top,player.rect.width,player.rect.height)
+            testRect = pygame.rect.Rect(player.rect.left - 2,player.rect.top,player.rect.width,player.rect.height)
             for spr in wallGroup:
                 distanceSquared = sqrMagnitude(player.gPosition.x, player.gPosition.y, spr.rect.x,spr.rect.y)
                 if distanceSquared < RENDER_DISTANCE * RENDER_DISTANCE:
@@ -159,7 +159,7 @@ def main():
 
         if inputManager.GetKeyHeld(locals.K_w):
             valid = True
-            testRect = pygame.rect.Rect(player.rect.left,player.rect.top - 1,player.rect.width,player.rect.height)
+            testRect = pygame.rect.Rect(player.rect.left,player.rect.top - 2,player.rect.width,player.rect.height)
             for spr in wallGroup:
                 distanceSquared = sqrMagnitude(player.gPosition.x, player.gPosition.y, spr.rect.x,spr.rect.y)
                 if distanceSquared < RENDER_DISTANCE * RENDER_DISTANCE:
@@ -172,7 +172,7 @@ def main():
                 player.MoveRelative(Vec2Up)
         if inputManager.GetKeyHeld(locals.K_s):
             valid = True
-            testRect = pygame.rect.Rect(player.rect.left,player.rect.top + 1,player.rect.width,player.rect.height)
+            testRect = pygame.rect.Rect(player.rect.left,player.rect.top + 2,player.rect.width,player.rect.height)
             for spr in wallGroup:
                 distanceSquared = sqrMagnitude(player.gPosition.x, player.gPosition.y, spr.rect.x,spr.rect.y)
                 if distanceSquared < RENDER_DISTANCE * RENDER_DISTANCE:
@@ -229,5 +229,3 @@ def main():
     else:
         pygame.quit()
 
-
-main()
