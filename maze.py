@@ -30,7 +30,7 @@ class MatrixGrid:
         for y in range(self.size + 1 + self.size):
             row = []
             for x in range(self.size + 1 + self.size):
-                row.append(False)
+                row.append(CWALL)
             self.walls.append(row)
         
         for i in range(self.size*self.size):
@@ -66,7 +66,7 @@ class MatrixGrid:
             #convert from linear j pos to grid xy coord
             wallsLoc = self.GraphIndexToWallsPos(j)
             #convert from xy coord to a self.walls location
-            self.walls[wallsLoc[1]][wallsLoc[0]] = True
+            self.walls[wallsLoc[1]][wallsLoc[0]] = CFLOOR
             #set that self.walls location to be walkable = true
             visitedDict[j] = False
         visitedDict[start] = True
@@ -100,18 +100,18 @@ class MatrixGrid:
                     #if diff is neg, it is either to the left or top
                     if 0 - cellDif < self.size:
                         #then it must be to the left of cur cell
-                        self.walls[wallsLocCurCell[1]][wallsLocCurCell[0]-1] = True
+                        self.walls[wallsLocCurCell[1]][wallsLocCurCell[0]-1] = CFLOOR
                     else:
                         #it is to the top of cur cell
-                        self.walls[wallsLocCurCell[1]-1][wallsLocCurCell[0]] = True
+                        self.walls[wallsLocCurCell[1]-1][wallsLocCurCell[0]] = CFLOOR
                 else:
                     #if diff is pos, it is either to the right or bottom
                     if cellDif < self.size:
                         #it must be to the right of cur cell
-                        self.walls[wallsLocCurCell[1]][wallsLocCurCell[0]+1] = True
+                        self.walls[wallsLocCurCell[1]][wallsLocCurCell[0]+1] = CFLOOR
                     else:
                         #it must be to the bottom
-                        self.walls[wallsLocCurCell[1]+1][wallsLocCurCell[0]] = True
+                        self.walls[wallsLocCurCell[1]+1][wallsLocCurCell[0]] = CFLOOR
                 #Mark choice number as visited
                 visitedDict[choice] = True
                 #put it on the stack
@@ -125,20 +125,27 @@ class MatrixGrid:
     def BuildMap(self,start,end):
         self.Generate(start,end)
         self.map = ""
+        startWallsPos = self.GraphIndexToWallsPos(start)
+        endWallsPos = self.GraphIndexToWallsPos(end)
+        self.walls[startWallsPos[1]][startWallsPos[0]] = CENTRANCE
+        self.walls[endWallsPos[1]][endWallsPos[0]] = CEXIT
         for row in self.walls:
             for col in row:
-                if col:
+                if col == CFLOOR:
                     self.map += '   '
-                else:
+                elif col == CWALL:
                     self.map += '[x]'
+                elif col == CENTRANCE:
+                    self.map += ' O '
+                elif col == CEXIT:
+                    self.map += ' X '
             self.map += '\n'
         
 
         
         
 
-maze = MatrixGrid(5)
-maze.BuildMap(0,24)
-print(maze)
+maze = MatrixGrid(11)
+maze.BuildMap(0,120)
 
 
