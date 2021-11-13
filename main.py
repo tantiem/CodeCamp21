@@ -57,12 +57,17 @@ allowedTimeTitle = fontSize50.render('Allowed Time Per Labyrinth', True, (255,25
 underLayallowedTime = pygame.surface.Surface((250,40))
 underLayallowedTime.fill((52,86,145))
 allowedTimeCounterShown = fontSize50.render(str(allowedTime)+' seconds', True, (179,186,179))
+#TEST variables
+fontSize100 = pygame.font.SysFont(None, 100)
+gameOverTitle = fontSize100.render('GAME OVER', True, (255,255,255))
+winTitle = fontSize100.render('YOU WIN!', True, (255,255,255))
 ##################################################################################################
 #Game runnning
 main = True
 startGame = False
 howToPlay = False
 options = False
+test = False
 quit = False
 running = True
 while running:
@@ -72,6 +77,7 @@ while running:
     if main:
         #MAIN MENU items drawn
         startButton,howToPlayButton,optionsButton,quitButton = makePages.makeMainMenu(PYGAME_WINDOW, surface1,mainTitle)
+        testButton = makeFunctions.makeButton(PYGAME_WINDOW, (100, 600), "Test",(179,186,179),(49,96,196),(52,79,125),(52,86,145),30)
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if startButton.collidepoint(pygame.mouse.get_pos()):
@@ -83,6 +89,9 @@ while running:
                 if optionsButton.collidepoint(pygame.mouse.get_pos()):
                     main = False
                     options = True
+                if testButton.collidepoint(pygame.mouse.get_pos()):
+                    main = False
+                    test = True
                 if quitButton.collidepoint(pygame.mouse.get_pos()):
                     main = False
                     quit = True
@@ -164,7 +173,8 @@ while running:
                 if mainButton.collidepoint(pygame.mouse.get_pos()):
                     options = False
                     main = True
-
+    elif test:
+        pass
     elif quit:
         pygame.quit()
     pygame.display.flip()
