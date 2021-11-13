@@ -14,6 +14,17 @@ surface1.fill((179,186,179))
 #Set text for MAIN MENU screen items
 menuFont = pygame.font.SysFont(None, 150)
 mainTitle = menuFont.render('Oasis Escape', True, (0,0,0))
+#StartGame variables
+gameGrass = pygame.surface.Surface((824,568))
+gameGrass.fill((51,214,36))
+gameWater = pygame.surface.Surface((824,200))
+gameWater.fill((49,135,196))
+triggerGrass = pygame.surface.Surface((200,100))
+triggerGrass.fill((51,214,36))
+daysLeftSign = pygame.surface.Surface((200,75))
+daysLeftSign.fill((161,89,21))
+daysLeftFont = pygame.font.SysFont(None, 50)
+daysLeftTitle = daysLeftFont.render(str(days) +' days left', True, (0,0,0))
 #Set text for HOW TO PLAY screen items
 howToPlayFont = pygame.font.SysFont(None, 150)
 howToPlayTitle = howToPlayFont.render('How To Play', True, (0,0,0))
@@ -73,9 +84,15 @@ while running:
                     main = False
                     quit = True
     elif startGame:
-        PYGAME_WINDOW.fill((51,214,36))
-        
-    
+        PYGAME_WINDOW.fill((179,186,179))
+        PYGAME_WINDOW.blit(gameGrass, (100,100))
+        PYGAME_WINDOW.blit(gameWater, (100,500))
+        pygame.draw.line(PYGAME_WINDOW, (221,224,29), (100,500), (923,500), 10)
+        PYGAME_WINDOW.blit(triggerGrass, (425,0))
+        PYGAME_WINDOW.blit(daysLeftSign, (724,15))
+        daysLeftTitle = daysLeftFont.render(str(days) +' days left', True, (0,0,0))
+        PYGAME_WINDOW.blit(daysLeftTitle, (729, 32))
+
     elif howToPlay:
         PYGAME_WINDOW.fill((51,214,36))
         makeFunctions.makeTitle(PYGAME_WINDOW, surface1,howToPlayTitle)
