@@ -63,11 +63,11 @@ class Timer:
         self.start=pygame.time.get_ticks()
 
     def GetCurTime(self):
-        return pygame.time.get_ticks() - self.start
+        return (pygame.time.get_ticks() - self.start) / 1000
 
     def StopTimer(self):
         self.end = pygame.time.get_ticks()
-        return self.end - self.start
+        return (self.end - self.start) / 1000
 
 class LabyrinthParser:
     """
@@ -102,17 +102,36 @@ class LabyrinthParser:
 
 def sqrMagnitude(x1,y1,x2,y2):
     return (y2-y1)*(y2-y1) + (x2-x1)*(x2-x1)
-    
 
-def mainexplore():
-    running = True
 
-    labyrinthParse = LabyrinthParser((0,0),tileSize)
+labyrinths = []
+
+
+def AddLabyrinth():
+    ###GENERATE A MAZE
     labyrinth = labyrinthgen.MatrixGrid(11)
     labyrinth.BuildMap(1,120,labyrinthObjects)
-    startPos = labyrinth.GraphIndexToWallsPos(1)
+    labyrinths.append(labyrinth)
+    ###GENERATE A MAZE
 
+
+    
+
+def mainexplore(time, curDays):
+    running = True
+
+    mazeTimer = Timer()
+    mazeTimer.StartTimer()
+
+    #Cycle the mazes
+
+    labyrinth = labyrinths[curDays%(len(labyrinths)) - 1]
+    
+    ###READS MAZE INTO MEMORY
+    labyrinthParse = LabyrinthParser((0,0),tileSize)
+    startPos = labyrinth.GraphIndexToWallsPos(1)
     labyrinthParse.Parse(labyrinth.map)
+    ###READS MAZE INTO EMMO
     
 
     player = Dynamic.Dynamic(Vector2(0,0),playerSurface,mainGroup)
@@ -192,6 +211,11 @@ def mainexplore():
         mainCam.Clear((52,86,145))
         #mainGroup.draw(mainCam)
         
+        curTimeInMaze = mazeTimer.GetCurTime()
+
+        if curTimeInMaze > time:
+            #2 means too much time passed in a maze. We lose instantly. bam.
+            return 2
 
         for spr in floorGroup:
             distanceSquared = sqrMagnitude(player.gPosition.x, player.gPosition.y, spr.rect.x,spr.rect.y)
@@ -210,14 +234,27 @@ def mainexplore():
             if distanceSquared < RENDER_DISTANCE * RENDER_DISTANCE:
                 spr.Draw(mainCam)
                 if spr.rect.colliderect(player.rect):
-                    pass
+                    #Return 0 means we are returning a WIN status back to main
+                    floorGroup.empty()
+                    wallGroup.empty()
+                    winGroup.empty()
+                    homeGroup.empty()
+                    mainGroup.empty()
+                    return 0
 
         for spr in homeGroup:
             distanceSquared = sqrMagnitude(player.gPosition.x, player.gPosition.y, spr.rect.x,spr.rect.y)
             if distanceSquared < RENDER_DISTANCE * RENDER_DISTANCE:
                 spr.Draw(mainCam)
-                if spr.rect.colliderect(player.rect):
-                    pass
+                if spr.rect.colliderect(player.rect) and curTimeInMaze > 5:
+                    #Return 1 means we are returning a GO BACK HOME status back to main
+                    floorGroup.empty()
+                    wallGroup.empty()
+                    winGroup.empty()
+                    homeGroup.empty()
+                    mainGroup.empty()
+                    return 1
+                    
 
         for spr in mainGroup:
             distanceSquared = sqrMagnitude(player.gPosition.x, player.gPosition.y, spr.rect.x,spr.rect.y)

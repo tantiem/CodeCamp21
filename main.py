@@ -63,6 +63,7 @@ fontSize100 = pygame.font.SysFont(None, 100)
 gameOverTitle = fontSize100.render('GAME OVER', True, (255,255,255))
 winTitle = fontSize100.render('YOU WIN!', True, (255,255,255))
 ##################################################################################################
+
 #Game runnning
 main = True
 startGame = False
@@ -71,6 +72,8 @@ options = False
 test = False
 quit = False
 exploring = False
+win = False
+lose = False
 running = True
 while running:
     for event in pygame.event.get():
@@ -79,21 +82,20 @@ while running:
     if main:
         #MAIN MENU items drawn
         startButton,howToPlayButton,optionsButton,quitButton = makePages.makeMainMenu(PYGAME_WINDOW, surface1,mainTitle)
-        testButton = makeFunctions.makeButton(PYGAME_WINDOW, (100, 600), "Test",(179,186,179),(49,96,196),(52,79,125),(52,86,145),30)
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if startButton.collidepoint(pygame.mouse.get_pos()):
                     main = False
                     startGame = True
+                    #######GENERATE MAZES############
+                    for i in range(labyrinths):
+                        labyrinthexplorer.AddLabyrinth()
                 if howToPlayButton.collidepoint(pygame.mouse.get_pos()):
                     main = False
                     howToPlay = True
                 if optionsButton.collidepoint(pygame.mouse.get_pos()):
                     main = False
                     options = True
-                if testButton.collidepoint(pygame.mouse.get_pos()):
-                    main = False
-                    test = True
                 if quitButton.collidepoint(pygame.mouse.get_pos()):
                     main = False
                     quit = True
@@ -127,6 +129,7 @@ while running:
             if triggerGrassRect.collidepoint((playerOasisX,playerOasisy-1)):
                 playerOasisy-=1
                 if (playerOasisy - 1) < 0:
+                    #This triggers going into the maze, and thus also mainexplore()
                     startGame = False
                     exploring = True
             elif (playerOasisy - 1) > 99:
@@ -176,10 +179,42 @@ while running:
                 if mainButton.collidepoint(pygame.mouse.get_pos()):
                     options = False
                     main = True
-    elif test:
-        pass
+    elif win:
+        PYGAME_WINDOW.fill((51,214,36))
+        PYGAME_WINDOW.blit(winTitle, (512-winTitle.get_width()/2 + 2,340))
+        quitButton = makeFunctions.makeButton(PYGAME_WINDOW, (480, 440), "Quit",(179,186,179),(49,96,196),(52,79,125),(52,86,145),50)
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if quitButton.collidepoint(pygame.mouse.get_pos()):
+                    win = False
+                    quit = True
+    elif lose:
+        PYGAME_WINDOW.fill((0,0,0))
+        PYGAME_WINDOW.blit(gameOverTitle, (512-gameOverTitle.get_width()/2 + 2,340))
+        quitButton = makeFunctions.makeButton(PYGAME_WINDOW, (480, 440), "Quit",(179,186,179),(49,96,196),(52,79,125),(52,86,145),50)
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if quitButton.collidepoint(pygame.mouse.get_pos()):
+                    test = False
+                    quit = True
     elif exploring:
-        labyrinthexplorer.mainexplore()
+        status = labyrinthexplorer.mainexplore(allowedTime, days)
+        if status == 0:
+            exploring = False
+            win = True
+        elif status == 1:
+            days -= 1
+            if days < 1:
+                startGame = False
+                exploring = False
+                lose = True
+                continue
+            exploring = False
+            startGame = True
+        elif status == 2:
+            startGame = False
+            exploring = False
+            lose = True
     elif quit:
         pygame.quit()
     pygame.display.flip()

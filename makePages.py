@@ -52,22 +52,3 @@ def makeOptions(screen,surface1,optionsTitle,numberLabyrinthsTitle,underLayNumbe
 
     mainButton = makeFunctions.makeButton(screen, (775, 650), "Main Menu",(179,186,179),(49,96,196),(52,79,125),(52,86,145),50)
     return lower1,upper1,lower2,upper2,lower3,upper3,mainButton
-
-#GAMEOVER screen
-#PYGAME_WINDOW.fill((0,0,0))
-#        PYGAME_WINDOW.blit(gameOverTitle, (512-gameOverTitle.get_width()/2 + 2,340))
-#        quitButton = makeFunctions.makeButton(PYGAME_WINDOW, (480, 440), "Quit",(179,186,179),(49,96,196),(52,79,125),(52,86,145),50)
-#        for event in pygame.event.get():
-#            if event.type == pygame.MOUSEBUTTONDOWN:
-#                if quitButton.collidepoint(pygame.mouse.get_pos()):
-#                    test = False
-#                    quit = True
-#WIN screen
-#PYGAME_WINDOW.fill((51,214,36))
-#        PYGAME_WINDOW.blit(winTitle, (512-winTitle.get_width()/2 + 2,340))
-#        quitButton = makeFunctions.makeButton(PYGAME_WINDOW, (480, 440), "Quit",(179,186,179),(49,96,196),(52,79,125),(52,86,145),50)
-#        for event in pygame.event.get():
-#            if event.type == pygame.MOUSEBUTTONDOWN:
-#                if quitButton.collidepoint(pygame.mouse.get_pos()):
-#                    test = False
-#                    quit = True
