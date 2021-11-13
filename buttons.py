@@ -25,9 +25,31 @@ daysLeftSign = pygame.surface.Surface((200,75))
 daysLeftSign.fill((161,89,21))
 daysLeftFont = pygame.font.SysFont(None, 50)
 daysLeftTitle = daysLeftFont.render(str(days) +' days left', True, (0,0,0))
+playerOasisX = 500
+playerOasisy = 500
 #Set text for HOW TO PLAY screen items
 howToPlayFont = pygame.font.SysFont(None, 150)
 howToPlayTitle = howToPlayFont.render('How To Play', True, (0,0,0))
+loreFont = pygame.font.SysFont(None, 30)
+loreText = loreFont.render("Oh no! You’re stuck in the Oasis! The Oasis might sound great, but it’s not at all what it seems.", True, (0,0,0))
+loreText2 = loreFont.render("If you don’t escape the Oasis in time, you’ll be doomed forever.", True, (0,0,0))
+howToWinFont = pygame.font.SysFont(None, 50)
+howToWinTitle = howToWinFont.render('How To Win', True, (255,255,255))
+howToWinTextFont = pygame.font.SysFont(None, 30)
+howToWinText = howToWinTextFont.render('The only way to escape the Oasis is to find the exit in the labyrinths in time', True, (0,0,0))
+howToLoseFont = pygame.font.SysFont(None, 50)
+howToLoseTitle = howToWinFont.render('How To Lose', True, (255,255,255))
+howToLoseTextFont = pygame.font.SysFont(None, 30)
+howToLoseText = howToWinTextFont.render('You won’t escape if you run out of days. You will also die if you don’t get back to the Oasis in', True, (0,0,0))
+howToLoseText2 = howToWinTextFont.render('time.', True, (0,0,0))
+howOptionsWorkFont = pygame.font.SysFont(None, 50)
+howOptionsWorkTitle = howOptionsWorkFont.render('How Options Work', True, (255,255,255))
+howOptionsWorkFont = pygame.font.SysFont(None, 30)
+howOptionsWorkText = howOptionsWorkFont.render('You can increase the number of labyrinths generated. If you have more days than the number of', True, (0,0,0))
+howOptionsWorkText1 = howOptionsWorkFont.render('labyrinths, the labyrinths will cycle through from the beginning. You may also set the amount of', True, (0,0,0))
+howOptionsWorkText2 = howOptionsWorkFont.render('time you would like per labyrinth.', True, (0,0,0))
+
+
 #Set text for OPTIONS screen items
 optionsFont = pygame.font.SysFont(None, 150)
 optionsTitle = optionsFont.render('Options', True, (0,0,0))
@@ -88,15 +110,54 @@ while running:
         PYGAME_WINDOW.blit(gameGrass, (100,100))
         PYGAME_WINDOW.blit(gameWater, (100,500))
         pygame.draw.line(PYGAME_WINDOW, (221,224,29), (100,500), (923,500), 10)
-        PYGAME_WINDOW.blit(triggerGrass, (425,0))
+        triggerGrassRect = PYGAME_WINDOW.blit(triggerGrass, (425,0))
         PYGAME_WINDOW.blit(daysLeftSign, (724,15))
         daysLeftTitle = daysLeftFont.render(str(days) +' days left', True, (0,0,0))
         PYGAME_WINDOW.blit(daysLeftTitle, (729, 32))
+        #player stuff
+        player = pygame.surface.Surface((50,50))
+        player.fill((250,3,11))
+
+        heldDownKeys = pygame.key.get_pressed()
+        if heldDownKeys[locals.K_d]:
+            if triggerGrassRect.collidepoint((playerOasisX,playerOasisy)):
+                if playerOasisX < 575:
+                    playerOasisX+=1
+            elif (playerOasisX + 1) < 875:
+                playerOasisX+=1
+        elif heldDownKeys[locals.K_a]:
+            if triggerGrassRect.collidepoint((playerOasisX,playerOasisy)):
+                if playerOasisX > 425:
+                    playerOasisX-=1
+            elif (playerOasisX - 1) > 99:
+                playerOasisX-=1
+        if heldDownKeys[locals.K_w]:
+            if triggerGrassRect.collidepoint((playerOasisX,playerOasisy-1)):
+                playerOasisy-=1
+                if (playerOasisy - 1) < 0:
+                    pygame.quit()
+            elif (playerOasisy - 1) > 99:
+                playerOasisy-=1
+        elif heldDownKeys[locals.K_s]:
+            if (playerOasisy + 1) < 651:
+                playerOasisy+=1
+        PYGAME_WINDOW.blit(player, (playerOasisX,playerOasisy))
 
     elif howToPlay:
         PYGAME_WINDOW.fill((51,214,36))
         makeFunctions.makeTitle(PYGAME_WINDOW, surface1,howToPlayTitle)
-        mainButton = makeFunctions.makeButton(PYGAME_WINDOW, (400, 500), "Main Menu",(179,186,179),(49,96,196),(52,79,125),(52,86,145),50)
+        mainButton = makeFunctions.makeButton(PYGAME_WINDOW, (775, 650), "Main Menu",(179,186,179),(49,96,196),(52,79,125),(52,86,145),50)
+        PYGAME_WINDOW.blit(loreText, (512-loreText.get_width()/2 + 2, 240))
+        PYGAME_WINDOW.blit(loreText2, (512-loreText2.get_width()/2 + 2, 260))
+        PYGAME_WINDOW.blit(howToWinTitle, (512-howToWinTitle.get_width()/2 + 2, 300))
+        PYGAME_WINDOW.blit(howToWinText, (512-howToWinText.get_width()/2 + 2, 350))
+        PYGAME_WINDOW.blit(howToLoseTitle, (512-howToLoseTitle.get_width()/2 + 2, 390))
+        PYGAME_WINDOW.blit(howToLoseText, (512-howToLoseText.get_width()/2 + 2, 440))
+        PYGAME_WINDOW.blit(howToLoseText2, (512-howToLoseText2.get_width()/2 + 2, 460))
+        PYGAME_WINDOW.blit(howOptionsWorkTitle, (512-howOptionsWorkTitle.get_width()/2 + 2, 500))
+        PYGAME_WINDOW.blit(howOptionsWorkText, (512-howOptionsWorkText.get_width()/2 + 2, 550))
+        PYGAME_WINDOW.blit(howOptionsWorkText1, (512-howOptionsWorkText1.get_width()/2 + 2, 570))
+        PYGAME_WINDOW.blit(howOptionsWorkText2, (512-howOptionsWorkText2.get_width()/2 + 2, 590))
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if mainButton.collidepoint(pygame.mouse.get_pos()):
