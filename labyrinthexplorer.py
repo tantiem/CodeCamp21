@@ -25,6 +25,7 @@ wallGroup = pgxObject.PgxGroup()
 floorGroup = pgxObject.PgxGroup()
 winGroup = pgxObject.PgxGroup()
 homeGroup = pgxObject.PgxGroup()
+constGroup = pgxObject.PgxGroup()
 
 floorTileSurface = pygame.surface.Surface((tileSize,tileSize))
 floorTileSurface.fill((100,50,30))
@@ -41,6 +42,14 @@ endTileSurface.fill((100,200,50))
 playerSurface = pygame.surface.Surface((50,50))
 playerSurface.fill((250,30,11))
 
+timerBackground = pygame.surface.Surface((200,90))
+timerBackground.fill((255,255,255))
+
+timerTextBg = Static.Static(Vector2(0,0),timerBackground,constGroup)
+timerText = pgxText.Text(Vector2(20,20),'verdana',"",50,constGroup)
+
+
+
 
 
 #FloorTile = Static.Static(Vector2(0,0),floorTileSurface,mainGroup)
@@ -49,7 +58,9 @@ playerSurface.fill((250,30,11))
 #ExitTile = Static.Static(Vector2(0,0),endTileSurface,mainGroup)
 
 camScreen = pygame.surface.Surface((SCR_X,SCR_Y))
+uiScreen = pygame.surface.Surface((SCR_X,SCR_Y))
 mainCam = Camera.Camera(Vector2(0,0),(SCR_X,SCR_Y),(0,0),camScreen)
+uiCam = Camera.Camera(Vector2(0,0),(SCR_X,SCR_Y),(0,0),uiScreen)
 
 labyrinthObjects = labyrinthgen.MatrixGridObjectContainer((wallTileSurface, wallGroup),(floorTileSurface, floorGroup),(startTileSurface,homeGroup),(endTileSurface,winGroup))
 
@@ -207,11 +218,17 @@ def mainexplore(time, curDays):
                 
 
         mainCam.SetCamZoom(0.6,P_DISPLAY)
+        uiCam.SetCamZoom(1,P_DISPLAY)
+
         mainGroup.update(mainCam)
+        constGroup.update(uiCam)
+
         mainCam.Clear((52,86,145))
+        uiCam.Clear((0,0,0),(0,0,0))
         #mainGroup.draw(mainCam)
         
         curTimeInMaze = mazeTimer.GetCurTime()
+        timerText.ChangeText("%.3f" % (time - curTimeInMaze))
 
         if curTimeInMaze > time:
             #2 means too much time passed in a maze. We lose instantly. bam.
@@ -260,6 +277,9 @@ def mainexplore(time, curDays):
             distanceSquared = sqrMagnitude(player.gPosition.x, player.gPosition.y, spr.rect.x,spr.rect.y)
             if distanceSquared < RENDER_DISTANCE * RENDER_DISTANCE:
                 spr.Draw(mainCam)
+
+        
+        constGroup.draw(uiCam)
 
 
         pygame.display.flip()
